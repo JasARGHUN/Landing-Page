@@ -1,0 +1,25 @@
+﻿@page "/location/create"
+@inject ILocationRepository _repository
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Add Address</h3>
+
+<LocationForm item="model" OnValidSubmit="Save"></LocationForm>
+
+@code {
+    private Location model = new Location();
+
+    private async Task Save()
+    {
+        try
+        {
+            await _repository.Create(model);
+            navigationManager.NavigateTo("block/index");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}

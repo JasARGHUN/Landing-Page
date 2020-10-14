@@ -1,0 +1,19 @@
+﻿<div class="card p-1 m-1 border-0">
+    <div class="text-center">
+        @item.Address
+    </div>
+</div>
+
+@code {
+    //realisation for this codeblock located in Shared/Components/BlockList
+
+    [Parameter] public Location item { get; set; }
+    [Parameter] public EventCallback<Location> Delete { get; set; }
+    private string contactUrl = string.Empty;
+
+    protected override void OnInitialized() //This method needing for getting details data for route in url
+    {
+        contactUrl = $"location/{item.Id}";
+    }
+
+}

@@ -1,0 +1,19 @@
+﻿<div class="card p-1 m-1 border-0">
+    <div class="text-center">
+        @item.Phone
+    </div>
+</div>
+
+@code {
+    //realisation for this codeblock located in Shared/Components/ContactList
+
+    [Parameter] public Contact item { get; set; }
+    [Parameter] public EventCallback<Contact> DeleteContact { get; set; }
+    private string contactUrl = string.Empty;
+
+    protected override void OnInitialized() //This method needing for getting details data for route in url
+    {
+        contactUrl = $"contact/{item.Id}";
+    }
+
+}

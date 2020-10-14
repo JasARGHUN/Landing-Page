@@ -1,0 +1,25 @@
+﻿@page "/sociallinks/create"
+@inject ISocialLinkRepository _repository
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Add Social Links</h3>
+
+<SocialLinkForm item="model" OnValidSubmit="Save"></SocialLinkForm>
+
+@code {
+    private SocialLinks model = new SocialLinks();
+
+    private async Task Save()
+    {
+        try
+        {
+            await _repository.Create(model);
+            navigationManager.NavigateTo("block/index");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}

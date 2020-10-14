@@ -1,0 +1,30 @@
+﻿@page "/contact/edit/{ItemId:int}"
+@inject IContactRepository contactRepository
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Edit Contact</h3>
+
+@if (contact != null)
+{
+    <ContactForm contact="contact" OnValidSubmit="Edit"></ContactForm>
+}
+
+
+@code {
+    //Realisation locate in Pages/Blocks/BlockForm
+
+    [Parameter] public int ItemId { get; set; }
+    public Contact contact;
+
+    protected async override Task OnInitializedAsync()
+    {
+        contact = await contactRepository.GetById(ItemId);
+    }
+
+    private void Edit()
+    {
+        contactRepository.Update(contact);
+        navigationManager.NavigateTo("block/index");
+    }
+}

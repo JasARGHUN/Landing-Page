@@ -1,0 +1,29 @@
+﻿<div class="mt-1">
+    <div class="media">
+        <img class="align-self-start mr-3" alt="..." src="@item.Logo" style="width:64px;height:64px; box-shadow:2px 2px 7px #000000;" />
+        <div class="media-body m-1">
+            <h5 class="lead mt-3" style="text-shadow:1px 13px 5px #aba8a8, 2px 2px 2px rgba(206,89,55,0);">@item.CompanyName</h5>
+        </div>
+    </div>
+    <hr />
+    <div class="text-center">
+        <img src="@item.Image" style="width:80%;height:60%; box-shadow:5px 5px 15px #000000;" alt="...">
+    </div>
+    <hr />
+    <p class="m-1">@item.Description</p>
+</div>
+<hr />
+
+@code {
+    //realisation for this codeblock located in Shared/Components/BlockList
+
+    [Parameter] public Company item { get; set; }
+    [Parameter] public EventCallback<Company> Delete { get; set; }
+    private string itemUrl = string.Empty;
+
+    protected override void OnInitialized() //This method needing for getting details data for route in url
+    {
+        itemUrl = $"company/{item.Id}";
+    }
+
+}

@@ -1,0 +1,30 @@
+﻿@page "/company/edit/{itemId:int}"
+@inject ICompanyRepository _repository
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Edit Company Information</h3>
+
+@if (item != null)
+{
+    <CompanyForm item="item" OnValidSubmit="Edit"></CompanyForm>
+}
+
+
+@code {
+    //Realisation locate in Pages/Blocks/BlockForm
+
+    [Parameter] public int itemId { get; set; }
+    public Company item;
+
+    protected async override Task OnInitializedAsync()
+    {
+        item = await _repository.GetById(itemId);
+    }
+
+    private async Task Edit()
+    {
+        await _repository.Update(item);
+        navigationManager.NavigateTo("/block/index");
+    }
+}

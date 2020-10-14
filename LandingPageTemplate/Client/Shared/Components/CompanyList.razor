@@ -1,0 +1,26 @@
+﻿@inject IJSRuntime js
+@inject ICompanyRepository repository
+
+<GenericList List="Items">
+    @*realisation located in Shared/Components/GenericList*@
+    <ElementTemplate Context="item">
+        <IndividualCompany item="item" Delete="Delete"></IndividualCompany>
+    </ElementTemplate>
+</GenericList>
+
+@code {
+    //All logic realese in Pages/Index
+    //All views located in Shared/IndividualCompany
+    [Parameter] public List<Company> Items { get; set; }
+
+    private async Task Delete(Company item)
+    {
+        var confirmed = await js.Confirm($"Delete {item.CompanyName}?");
+
+        if (confirmed)
+        {
+            await repository.Delete(item.Id);
+            Items.Remove(item);
+        }
+    }
+}

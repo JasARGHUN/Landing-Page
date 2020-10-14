@@ -1,0 +1,29 @@
+﻿@inject IJSRuntime js
+@inject ISocialLinkRepository _repository
+
+<h5 class="text-center m-1">Social Links</h5>
+<hr />
+<GenericList List="socialLinks">
+    @*realisation located in Shared/Components/GenericList*@
+    <ElementTemplate Context="item">
+        <IndividualSocialLink item="item" Delete="Delete"></IndividualSocialLink>
+    </ElementTemplate>
+</GenericList>
+<hr />
+<br />
+
+
+@code {
+    [Parameter] public List<SocialLinks> socialLinks { get; set; }
+
+    private async Task Delete(SocialLinks item)
+    {
+        var confirmed = await js.Confirm($"Delete object?");
+
+        if (confirmed)
+        {
+            await _repository.Delete(item.Id);
+            socialLinks.Remove(item);
+        }
+    }
+}

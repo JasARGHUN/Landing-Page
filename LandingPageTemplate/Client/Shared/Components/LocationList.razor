@@ -1,0 +1,30 @@
+﻿@inject IJSRuntime js
+@inject ILocationRepository _repository
+
+<h5 class="text-center m-1">Address</h5>
+<hr />
+<GenericList List="Locations">
+    @*realisation located in Shared/Components/GenericList*@
+    <ElementTemplate Context="location">
+        <IndividualLocation item="location" Delete="Delete"></IndividualLocation>
+    </ElementTemplate>
+</GenericList>
+<br />
+
+
+@code {
+    //All logic realese in Pages/Index
+    //All views located in Shared/IndividualBlock
+    [Parameter] public List<Location> Locations { get; set; }
+
+    private async Task Delete(Location location)
+    {
+        var confirmed = await js.Confirm($"Delete object?");
+
+        if (confirmed)
+        {
+            await _repository.Delete(location.Id);
+            Locations.Remove(location);
+        }
+    }
+}

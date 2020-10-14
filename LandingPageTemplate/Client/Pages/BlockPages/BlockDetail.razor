@@ -1,0 +1,53 @@
+﻿@page "/block/{itemId:int}"
+@inject IJSRuntime js
+
+@inject IBlockRepository _repository
+@inject NavigationManager _navigate
+
+@if (model == null)
+{
+    <h5 class="text-center">Loading...</h5>
+}
+else
+{
+    <div class="card mb-3">
+        <div class="row no-gutters">
+            <div class="col-md-4">
+                <img src="@model.Image" style="height:300px;width:300px;" class="card-img" alt="...">
+            </div>
+            <div class="card-header">
+                <h5>@model.Name</h5>
+            </div>
+            <div class="card-body">
+                <p>@model.Description</p>
+            </div>
+            <div class="card-footer">
+                <a href="/block/edit/@model.Id" class="btn btn-sm btn-warning">Edit Block</a>
+                <button class="btn btn-sm btn-danger" @onclick="@(() => DeleteItem(model.Id))">Delete</button>
+            </div>
+        </div>
+    </div>
+}
+
+
+@code {
+    [Parameter] public int itemId { get; set; }
+
+    Block model;
+
+    protected async override Task OnInitializedAsync()
+    {
+        model = await _repository.GetById(itemId);
+    }
+
+    private async Task DeleteItem(int id)
+    {
+        var confirmed = await js.Confirm($"Confirm delete");
+
+        if (confirmed)
+        {
+            await _repository.Delete(id);
+            _navigate.NavigateTo("block/index");
+        }
+    }
+}

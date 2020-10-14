@@ -1,0 +1,48 @@
+﻿@typeparam TItem
+
+@if (List == null)
+{
+    @if (NullTemplate != null)
+    {
+        <h5>@NullTemplate</h5>
+    }
+    else
+    {
+        <h5>Loading...</h5>
+    }
+}
+else if (List.Count == 0)
+{
+    @if (EmptyTemplate != null)
+    {
+        <h5>@EmptyTemplate</h5>
+    }
+    else
+    {
+        <h5>No products to see...</h5>
+    }
+}
+else
+{
+
+    @if (ElementTemplate != null)
+    {
+        @foreach (var element in List)@*view for this codeblock located in Shared/IndividualProduct && IndividualBlock*@
+        {
+            @ElementTemplate(element)
+        }
+    }
+    else
+    {
+        @WholeListTemplate
+    }
+}
+
+@code {
+    [Parameter] public List<TItem> List { get; set; }
+    [Parameter] public RenderFragment<TItem> ElementTemplate { get; set; }
+    [Parameter] public RenderFragment WholeListTemplate { get; set; }
+
+    [Parameter] public RenderFragment NullTemplate { get; set; }
+    [Parameter] public RenderFragment EmptyTemplate { get; set; }
+}

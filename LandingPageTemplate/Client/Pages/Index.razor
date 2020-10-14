@@ -1,0 +1,57 @@
+﻿@page "/"
+@inject IBlockRepository _blockRepository
+@inject IContactRepository _contactRepository
+@inject ILocationRepository _locationRepository
+@inject ISocialLinkRepository _socialRepository
+@inject ICompanyRepository _companyRepository
+
+
+<div class="p-3 text-center">
+    <CompanyList Items="company"></CompanyList>
+</div>>
+<br />
+<div class="container text-center">
+    <BlockList Blocks="blocks"></BlockList>
+    <br />
+    <div>
+        <div class="row">
+            <div class="col-sm m-2" style="box-shadow: 2px 2px 7px #000000;">
+                <ContactList Contacts="contacts"></ContactList>
+            </div>
+            <div class="col-sm m-2" style="box-shadow: 2px 2px 7px #000000;">
+                <LocationList Locations="locations"></LocationList>
+            </div>
+            <div class="col-sm m-2">
+                <SocialLinkList socialLinks="socialLinks"></SocialLinkList>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code
+{
+    //Views for this file located in Shared/Components/BlockList.razor
+
+    private List<Block> blocks;
+    private List<Contact> contacts;
+    private List<Location> locations;
+    private List<SocialLinks> socialLinks;
+    private List<Company> company;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            blocks = await _blockRepository.GetItems();
+            contacts = await _contactRepository.Get();
+            locations = await _locationRepository.Get();
+            socialLinks = await _socialRepository.Get();
+            company = await _companyRepository.GetItems();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}

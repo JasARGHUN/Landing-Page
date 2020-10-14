@@ -1,0 +1,27 @@
+﻿@page "/company/create"
+@inject ICompanyRepository repository
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Add Company Information</h3>
+
+<CompanyForm item="model" OnValidSubmit="Save"></CompanyForm>
+
+@code {
+    private Company model = new Company();
+
+    private async Task Save()
+    {
+        try
+        {
+            await repository.Create(model);
+            navigationManager.NavigateTo("block/index");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+        Console.WriteLine($"Item created:{model.Id}");
+    }
+}

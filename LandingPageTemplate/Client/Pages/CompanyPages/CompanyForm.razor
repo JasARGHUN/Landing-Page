@@ -1,0 +1,60 @@
+﻿<EditForm Model="item" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Company Name:</label>
+        <div>
+            <InputText @bind-Value="@item.CompanyName" class="form-control"></InputText>
+            <ValidationMessage For="@(() => item.CompanyName)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <InputImg Label="Company Logo" OnSelectedImage="LogoSelected" ImageURL="@logoURL" />
+    </div>
+
+    <div class="form-group">
+        <InputImg Label="Company Picture" OnSelectedImage="PhotoSelected" ImageURL="@imageURL" />
+    </div>
+
+    <div class="form-group form-markdown">
+        <InputMarkdown @bind-Value="item.Description" Label="Information" For="@(() => item.Description)" />
+    </div>
+
+    <button class="btn btn-success" type="submit">Save</button>
+    <a href="/block/index" class="btn btn-outline-warning">Back</a>
+</EditForm>
+
+@code {
+    //Realisation locate in Pages/Blocks/CreateBlock and EditBlock
+    [Parameter] public Company item { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    private string imageURL;
+    private string logoURL;
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(item.Logo))
+        {
+            logoURL = item.Logo;
+            item.Logo = null;
+        }
+
+        if (!string.IsNullOrEmpty(item.Image))
+        {
+            imageURL = item.Image;
+            item.Image = null;
+        }
+    }
+
+    private void PhotoSelected(string imageBase64)
+    {
+        item.Image = imageBase64;
+        imageURL = null;
+    }
+
+    private void LogoSelected(string imageBase64)
+    {
+        item.Logo = imageBase64;
+        logoURL = null;
+    }
+}

@@ -1,0 +1,44 @@
+﻿@page "/mainpage/auth"
+
+@inherits LayoutComponentBase
+@inject NewsProject.Client.Auth.TokenRenewer tokenRenewer
+@inject NavigationManager navigationManager
+@inject IJSRuntime js
+
+<div class="main">
+    <div class="top-row px-4">
+        <LoginLinks></LoginLinks>
+
+        <AuthorizeView Roles="Admin">
+            <a href="/block/index" class="btn btn-outline-warning">Admin Panel</a>
+        </AuthorizeView>
+            
+    </div>
+    
+    <div class="content px-4" style="margin-bottom: 20px;">
+        @Body
+    </div>
+</div>
+
+@code
+{
+    [CascadingParameter] public Task<AuthenticationState> AuthenticationState { get; set; }
+
+    protected override void OnInitialized()
+    {
+        //base.OnInitialized();
+        //await js.InitializeInactivityTimer(DotNetObjectReference.Create(this));
+        tokenRenewer.Initiate();
+    }
+
+    [JSInvokable]
+    public async Task Logout()
+    {
+        var authState = await AuthenticationState;
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            // Uncomment to activate automatic logout
+            navigationManager.NavigateTo("/mainpage/auth");
+        }
+    }
+}

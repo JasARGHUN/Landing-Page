@@ -1,0 +1,30 @@
+﻿@page "/location/edit/{ItemId:int}"
+@inject ILocationRepository _repository
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Edit Contact</h3>
+
+@if (item != null)
+{
+    <LocationForm item="item" OnValidSubmit="Edit"></LocationForm>
+}
+
+
+@code {
+    //Realisation locate in Pages/Blocks/BlockForm
+
+    [Parameter] public int ItemId { get; set; }
+    public Location item;
+
+    protected async override Task OnInitializedAsync()
+    {
+        item = await _repository.GetById(ItemId);
+    }
+
+    private void Edit()
+    {
+        _repository.Update(item);
+        navigationManager.NavigateTo("block/index");
+    }
+}

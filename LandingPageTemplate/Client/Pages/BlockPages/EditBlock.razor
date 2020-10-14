@@ -1,0 +1,30 @@
+﻿@page "/block/edit/{itemId:int}"
+@inject IBlockRepository _repository
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Edit Block</h3>
+
+@if (block != null)
+{
+    <BlockForm block="block" OnValidSubmit="Edit"></BlockForm>
+}
+
+
+@code {
+    //Realisation locate in Pages/Blocks/BlockForm
+
+    [Parameter] public int itemId { get; set; }
+    public Block block;
+
+    protected async override Task OnInitializedAsync()
+    {
+        block = await _repository.GetById(itemId);
+    }
+
+    private async Task Edit()
+    {
+        await _repository.Update(block);
+        navigationManager.NavigateTo("/block/index");
+    }
+}

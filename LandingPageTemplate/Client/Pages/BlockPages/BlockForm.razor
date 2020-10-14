@@ -1,0 +1,42 @@
+﻿<EditForm Model="block" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Block:</label>
+        <div>
+            <InputText @bind-Value="@block.Name" class="form-control"></InputText>
+            <ValidationMessage For="@(() => block.Name)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <InputImg Label="Photo" OnSelectedImage="PhotoSelected" ImageURL="@imageURL" />
+    </div>
+
+    <div class="form-group form-markdown">
+        <InputMarkdown @bind-Value="block.Description" Label="Information" For="@(() => block.Description)" />
+    </div>
+
+    <button class="btn btn-success" type="submit">Save Changes</button>
+    <a href="/block/index" class="btn btn-outline-warning">Back</a>
+</EditForm>
+
+@code {
+    //Realisation locate in Pages/Blocks/CreateBlock and EditBlock
+    [Parameter] public Block block { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    private string imageURL;
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(block.Image))
+        {
+            imageURL = block.Image;
+            block.Image = null;
+        }
+    }
+
+    private void PhotoSelected(string imageBase64)
+    {
+        block.Image = imageBase64;
+        imageURL = null;
+    }
+}

@@ -1,0 +1,263 @@
+﻿@page "/block/index"
+@inject IBlockRepository _repository
+@inject IContactRepository _contactRepository
+@inject ILocationRepository _locationRepository
+@inject ISocialLinkRepository _socialLinkRepository
+@inject ICompanyRepository _companyRepository
+@inject IJSRuntime js
+
+<div class="top-row px-4">
+        <LoginLinks></LoginLinks>
+</div>
+
+<AuthorizeView Roles="Admin">
+    <Authorized>
+
+        <br />
+
+        <div class="container">
+
+            <h3>Control Panel</h3>
+
+            <GenericList List="company">
+                <WholeListTemplate>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th></th>
+                                <th>Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in company)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>
+                                        <img src="@item.Image" style="height:50px; width:50px;" />
+                                    </td>
+                                    <td>
+                                        @item.CompanyName
+                                    </td>
+                                    <td>
+                                        <a href="/company/edit/@item.Id" class="btn btn-sm btn-warning">Edit</a>
+                                        <button class="btn btn-sm btn-danger" @onclick="@(() => DeleteCompany(item.Id))">Delete</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </WholeListTemplate>
+            </GenericList>
+
+            <a href="/company/create" class="btn btn-outline-warning">Add Company Header</a>
+            <hr />
+
+            <GenericList List="Blocks">
+                <WholeListTemplate>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th></th>
+                                <th>Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Blocks)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>
+                                        <img src="@item.Image" style="height:50px; width:50px;" />
+                                    </td>
+                                    <td>
+                                        @item.Name
+                                    </td>
+                                    <td>
+                                        <a href="/block/edit/@item.Id" class="btn btn-sm btn-warning">Edit</a>
+                                        <button class="btn btn-sm btn-danger" @onclick="@(() => DeleteBlock(item.Id))">Delete</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </WholeListTemplate>
+            </GenericList>
+
+            <a href="/block/create" class="btn btn-outline-warning">Add Block</a>
+            <hr />
+
+            <GenericList List="phones">
+                <WholeListTemplate>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Phone</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in phones)
+                            {
+                                <tr>
+                                    <td>@item.Phone</td>
+                                    <td>
+                                        <a href="/contact/edit/@item.Id" class="btn btn-sm btn-warning">Edit</a>
+                                        <button class="btn btn-sm btn-danger" @onclick="@(() => DeleteContact(item.Id))">Delete</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </WholeListTemplate>
+            </GenericList>
+
+            <a class="btn btn-outline-warning" href="/contact/create">Add Phone Number</a>
+            <hr />
+
+            <GenericList List="address">
+                <WholeListTemplate>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Address</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in address)
+                            {
+                                <tr>
+                                    <td>@item.Address</td>
+                                    <td>
+                                        <a href="/location/edit/@item.Id" class="btn btn-sm btn-warning">Edit</a>
+                                        <button class="btn btn-sm btn-danger" @onclick="@(() => DeleteAddress(item.Id))">Delete</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </WholeListTemplate>
+            </GenericList>
+
+            <a class="btn btn-outline-warning" href="/location/create">Add Address</a>
+
+            <GenericList List="socialLinks">
+                <WholeListTemplate>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Social Link</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in socialLinks)
+                            {
+                                <tr>
+                                    <td><img src="@item.SocialImage" style="height:50px; width:50px;" /></td>
+                                    <td>@item.Name</td>
+                                    <td>
+                                        <a href="/sociallink/edit/@item.Id" class="btn btn-sm btn-warning">Edit</a>
+                                        <button class="btn btn-sm btn-danger" @onclick="@(() => DeleteAddress(item.Id))">Delete</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </WholeListTemplate>
+            </GenericList>
+
+            <a class="btn btn-outline-warning" href="/sociallinks/create">Add Social Addres</a>
+
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <h3 class="text-center mt-4">You're not authorized</h3>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+    List<Block> Blocks;
+    List<Contact> phones;
+    List<Location> address;
+    List<SocialLinks> socialLinks;
+    List<Company> company;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Blocks = await _repository.GetItems();
+            phones = await _contactRepository.Get();
+            address = await _locationRepository.Get();
+            socialLinks = await _socialLinkRepository.Get();
+            company = await _companyRepository.GetItems();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task DeleteCompany(int id)
+    {
+        var confirmed = await js.Confirm($"Confirm delete");
+
+        if (confirmed)
+        {
+            await _companyRepository.Delete(id);
+            company = await _companyRepository.GetItems();
+        }
+    }
+
+    private async Task DeleteBlock(int id)
+    {
+        var confirmed = await js.Confirm($"Confirm delete");
+
+        if (confirmed)
+        {
+            await _repository.Delete(id);
+            Blocks = await _repository.GetItems();
+        }
+    }
+
+    private async Task DeleteContact(int id)
+    {
+        var confirmed = await js.Confirm($"Confirm delete");
+
+        if (confirmed)
+        {
+            await _contactRepository.Delete(id);
+            phones = await _contactRepository.Get();
+        }
+    }
+
+    private async Task DeleteAddress(int id)
+    {
+        var confirmed = await js.Confirm($"Confirm delete");
+
+        if (confirmed)
+        {
+            await _locationRepository.Delete(id);
+            address = await _locationRepository.Get();
+        }
+    }
+
+    private async Task DeleteSocialLink(int id)
+    {
+        var confirmed = await js.Confirm($"Confirm delete");
+
+        if (confirmed)
+        {
+            await _socialLinkRepository.Delete(id);
+            phones = await _contactRepository.Get();
+        }
+    }
+}

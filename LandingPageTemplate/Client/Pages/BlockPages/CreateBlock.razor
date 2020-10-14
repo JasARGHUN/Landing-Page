@@ -1,0 +1,27 @@
+﻿@page "/block/create"
+@inject IBlockRepository blockRepository
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Create Block</h3>
+
+<BlockForm block="model" OnValidSubmit="Save"></BlockForm>
+
+@code {
+    private Block model = new Block();
+
+    private async Task Save()
+    {
+        try
+        {
+            await blockRepository.Create(model);
+            navigationManager.NavigateTo("block/index");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+        Console.WriteLine($"Item created:{model.Id}");
+    }
+}

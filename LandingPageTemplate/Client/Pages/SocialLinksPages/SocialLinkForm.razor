@@ -1,0 +1,46 @@
+﻿<EditForm Model="item" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Social Link Name</label>
+        <div>
+            <InputText @bind-Value="@item.Name" class="form-control"></InputText>
+            <ValidationMessage For="@(() => item.Name)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Enter social page URL:</label>
+        <div>
+            <InputText @bind-Value="@item.SocialLinksURL" class="form-control"></InputText>
+            <ValidationMessage For="@(() => item.SocialLinksURL)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <InputImg Label="Picture" OnSelectedImage="PhotoSelected" ImageURL="@imageURL" />
+    </div>
+
+    <button class="btn btn-success" type="submit">Save</button>
+    <a href="/block/index" class="btn btn-outline-warning">Back</a>
+</EditForm>
+
+@code {
+    [Parameter] public SocialLinks item { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    private string imageURL;
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(item.SocialImage))
+        {
+            imageURL = item.SocialImage;
+            item.SocialImage = null;
+        }
+    }
+
+    private void PhotoSelected(string imageBase64)
+    {
+        item.SocialImage = imageBase64;
+        imageURL = null;
+    }
+}

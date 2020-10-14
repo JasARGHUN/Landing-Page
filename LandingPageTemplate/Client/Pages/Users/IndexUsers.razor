@@ -1,0 +1,44 @@
+﻿@page "/users"
+@inject IUserRepository repository
+
+<div class="container">
+    <GenericList List="users">
+        <WholeListTemplate>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Users</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in users)
+                    {
+                        <tr>
+                            <td>
+                                <h5>@item.Email</h5>
+                            </td>
+                            <td>
+                                <a href="/users/edit/@item.UserId" class="btn btn-sm btn-outline-warning">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </WholeListTemplate>
+    </GenericList>
+</div>
+
+@code {
+    List<UserDTO> users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUsers();
+    }
+
+    private async Task LoadUsers()
+    {
+        users = await repository.Get();
+    }
+}

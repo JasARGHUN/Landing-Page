@@ -1,0 +1,28 @@
+﻿@inject IJSRuntime js
+@inject IBlockRepository blockRepository
+
+<h3 class="text-center mt-4 mb-3">About our company</h3>
+
+<GenericList List="Blocks">
+    @*realisation located in Shared/Components/GenericList*@
+    <ElementTemplate Context="block">
+        <IndividualBlock item="block" DeleteBlock="DeleteBlock"></IndividualBlock>
+    </ElementTemplate>
+</GenericList>
+
+@code {
+    //All logic realese in Pages/Index
+    //All views located in Shared/IndividualBlock
+    [Parameter] public List<Block> Blocks { get; set; }
+
+    private async Task DeleteBlock(Block block)
+    {
+        var confirmed = await js.Confirm($"Delete {block.Name}?");
+
+        if (confirmed)
+        {
+            await blockRepository.Delete(block.Id);
+            Blocks.Remove(block);
+        }
+    }
+}

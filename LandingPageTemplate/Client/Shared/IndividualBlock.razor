@@ -1,0 +1,22 @@
+﻿<div class="card mb-3 border-0">
+    <img src="@item.Image" style="box-shadow: 5px 5px 15px #000000;" class="card-img-top" alt="...">
+    <div class="card-body">
+        <h5 class="card-title">@item.Name</h5>
+        <p class="card-text">@item.Description</p>
+    </div>
+</div>
+<hr />
+
+@code {
+    //realisation for this codeblock located in Shared/Components/BlockList
+
+    [Parameter] public Block item { get; set; }
+    [Parameter] public EventCallback<Block> DeleteBlock { get; set; }
+    private string blockUrl = string.Empty;
+
+    protected override void OnInitialized() //This method needing for getting details data for route in url
+    {
+        blockUrl = $"block/{item.Id}";
+    }
+
+}

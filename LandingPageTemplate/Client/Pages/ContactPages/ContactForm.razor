@@ -1,0 +1,21 @@
+﻿<EditForm Model="contact" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="form-group">
+        <label>Phone:</label>
+        <div>
+            <InputText @bind-Value="@contact.Phone" class="form-control"></InputText>
+            <ValidationMessage For="@(() => contact.Phone)" />
+        </div>
+    </div>
+
+    <button class="btn btn-success" type="submit">Submit</button>
+    <a href="/block/index" class="btn btn-outline-warning">Back</a>
+</EditForm>
+
+@code 
+{
+    [Parameter] public Contact contact { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+}

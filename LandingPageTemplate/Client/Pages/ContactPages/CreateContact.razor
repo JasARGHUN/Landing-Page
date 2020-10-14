@@ -1,0 +1,25 @@
+﻿@page "/contact/create"
+@inject IContactRepository _repository
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Add Phone number</h3>
+
+<ContactForm contact="model" OnValidSubmit="SaveContac"></ContactForm>
+
+@code {
+    private Contact model = new Contact();
+
+    private async Task SaveContac()
+    {
+        try
+        {
+            await _repository.Create(model);
+            navigationManager.NavigateTo("block/index");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}

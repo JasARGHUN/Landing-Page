@@ -1,0 +1,19 @@
+﻿<div class="card p-1 m-1 border-0">
+    <div class="text-center">
+        <a href="@item.SocialLinksURL"><img src="@item.SocialImage" style="width:50px; height:50px; border-radius:50%; box-shadow:2px 2px 7px #000000;"/></a>
+    </div>
+</div>
+
+@code {
+    //realisation for this codeblock located in Shared/Components/BlockList
+
+    [Parameter] public SocialLinks item { get; set; }
+    [Parameter] public EventCallback<SocialLinks> Delete { get; set; }
+    private string contactUrl = string.Empty;
+
+    protected override void OnInitialized() //This method needing for getting details data for route in url
+    {
+        contactUrl = $"sociallinks/{item.Id}";
+    }
+
+}

@@ -1,0 +1,30 @@
+﻿@page "/sociallink/edit/{ItemId:int}"
+@inject ISocialLinkRepository repository
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Edit Soacial Link</h3>
+
+@if (item != null)
+{
+    <SocialLinkForm item="item" OnValidSubmit="Edit"></SocialLinkForm>
+}
+
+
+@code {
+    //Realisation locate in Pages/SocialLink/SocialLinkForm
+
+    [Parameter] public int ItemId { get; set; }
+    public SocialLinks item;
+
+    protected async override Task OnInitializedAsync()
+    {
+        item = await repository.GetById(ItemId);
+    }
+
+    private void Edit()
+    {
+        repository.Update(item);
+        navigationManager.NavigateTo("block/index");
+    }
+}
